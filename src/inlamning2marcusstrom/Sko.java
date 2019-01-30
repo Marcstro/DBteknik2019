@@ -93,6 +93,34 @@ public class Sko {
     String created;
     String updated;
     String info;
+    Marke marke;
+    Farg farg;
+    Kategori kategori;
+
+    public Marke getMarke() {
+        return marke;
+    }
+
+    public Farg getFarg() {
+        return farg;
+    }
+
+    public Kategori getKategori() {
+        return kategori;
+    }
+
+    public void setMarke(Marke marke) {
+        this.marke = marke;
+    }
+
+    public void setFarg(Farg farg) {
+        this.farg = farg;
+    }
+
+    public void setKategori(Kategori kategori) {
+        this.kategori = kategori;
+    }
+    
     
     Sko(int id, int antal, int storlek, int fargId,  int markeId, int pris, int kategoriId, String created, String updated){
        this.id=id;

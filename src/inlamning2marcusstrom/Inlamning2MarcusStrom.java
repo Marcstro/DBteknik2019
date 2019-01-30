@@ -65,7 +65,7 @@ public class Inlamning2MarcusStrom {
                int kop = Integer.parseInt(kopa);
                if(r.finnsSko(kop)){
                    r.createMinaBestallningar();
-                   System.out.println(r.geSko(kop).getInfo());
+                 //  System.out.println(r.geSko(kop).getInfo());
                  //  break;
                }
                else{
@@ -79,7 +79,7 @@ public class Inlamning2MarcusStrom {
                               r.getAktuellaBestallningarInfo());
               int bestallning = 0;
               if(vilkenBestallning.equalsIgnoreCase("n")){
-                  r.skapaNyBestallning();
+                  //r.skapaNyBestallning();
                    bestallning = 0;
               }
               

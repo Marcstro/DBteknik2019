@@ -49,6 +49,11 @@ public class Repository {
     LinkedList<Bestallning> minaBestallningar = new LinkedList<>();
     LinkedList<Orderinfo> orderInfos = new LinkedList<>();
     
+    //88
+    LinkedList<Marke> marken = new LinkedList<>();
+    LinkedList<Farg> farger = new LinkedList<>();
+    LinkedList<Kategori> kategorier = new LinkedList<>();
+    
     LinkedList<Kund> nylista=new LinkedList<>();
     
     LinkedList<Sko> inkopsLista = new LinkedList<>();
@@ -74,6 +79,8 @@ public class Repository {
         skapaVaroLista();
         createBestallningar();
         createOrderinfo();
+        
+        createSkoUppgifter();
 //        int raknare = 1; 
 //                for(Bestallning g: bestallningar){
 //            System.out.println(raknare + ": " + g.toString());// + ": " + g.getInfo());
@@ -229,6 +236,63 @@ public class Repository {
             e.printStackTrace();
         }
     }
+    public void createSkoUppgifter(){//OBS OBS INTE GJORD KLAR FUNKAR EJ GOR HAR!
+        try{//77
+           Statement stmt1 = con.createStatement();
+            ResultSet rs = stmt1.executeQuery("Select * from marke");
+            
+            while(rs.next()){
+               // int id = Integer.parseInt((rs.getString("id")));
+               int id = rs.getInt("id");
+               String namn = rs.getString("namn");
+               Marke nym = new Marke(id,namn);
+               marken.add(nym);
+            }
+            Statement stmt2 = con.createStatement();
+            ResultSet rs2 = stmt2.executeQuery("Select * from farg");
+            while(rs2.next()){
+               // int id = Integer.parseInt((rs.getString("id")));
+               int id = rs2.getInt("id");
+               String f1 = rs2.getString("primarfarg");
+               String f2 = rs2.getString("sekundarfarg");
+               Farg f = new Farg(id,f1,f2);
+               farger.add(f);
+            }
+            Statement stmt3 = con.createStatement();
+            ResultSet rs3 = stmt3.executeQuery("Select * from kategori");
+            while(rs3.next()){
+               // int id = Integer.parseInt((rs.getString("id")));
+               int id = rs3.getInt("id");
+               String namn = rs3.getString("namn");
+               String created = rs3.getString("created");
+               String updated = rs3.getString("updated");
+               
+               Kategori k = new Kategori(id, namn, created,updated);
+               kategorier.add(k);
+            }
+            
+            for(Sko s: skor){
+                for(Marke m: marken){
+                    if(s.getId()==m.getId()){
+                        s.setMarke(m);
+                    }
+                }
+                for(Farg f: farger){
+                    if(s.getId()==f.getId()){
+                        s.setFarg(f);
+                    }
+                }
+                for(Kategori k: kategorier){
+                    if(s.getId()==k.getId()){
+                        s.setKategori(k);
+                    }
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
     public void createMinaBestallningar(){
         try{
            for(Bestallning g: bestallningar){
@@ -257,7 +321,7 @@ public class Repository {
          varor.clear();
          for(Sko s: skor){
          //varor.put( raknare, s.getInfo());
-             System.out.println(s.getAntal());
+            // System.out.println(s.getAntal());
          if(s.getAntal()>0){
          varor.put(raknare, s);
          raknare++;
@@ -272,6 +336,7 @@ public class Repository {
          List<Bestallning> aktuella = minaBestallningar.stream().filter(B -> !B.expedierad).collect(Collectors.toList());
          
          int raknare = 0;
+         aktuellaBestallningar.clear();//fel66
          
          for(Bestallning b: aktuella){
             raknare++;
@@ -298,7 +363,7 @@ public class Repository {
      }
     public String getSkorsInfo(){
         String returr="";
-                int mangd = varor.size();
+              //  int mangd = varor.size();
                 //HERE OBS OBS 260 OBS OBS
               //  varor.forEach((k,v)->System.out.println("Fruit: " + k + ", Price: " + v));
                // varor.forEach((k,v)->returr+=key.toString() + ", " + varor.get(key).getInfo() + "\n");
@@ -344,6 +409,7 @@ public class Repository {
      return "Success! Fran rep";
      }
      catch(Exception e){
+         JOptionPane.showMessageDialog(null, "OBS nagot gick fel, kopet gick ej igenom!");
          e.printStackTrace();
          String arf = e.toString() + ", Nagot gick fel, kopet genomfordes EJ!";
          return arf;
@@ -357,7 +423,7 @@ public class Repository {
             stmt.execute();
                 Statement stmtt = con.createStatement();
                 ResultSet rs = stmtt.executeQuery("select * from bestallning where id = (select max(id) from bestallning);");
-            
+                boolean gjort = false;
                 while(rs.next()){
                // int id = Integer.parseInt((rs.getString("id")));
                 int id = rs.getInt("id");
@@ -369,9 +435,14 @@ public class Repository {
                 Bestallning nyBestallning = new Bestallning(id, kundId, expedierad, created, updated);
                 bestallningar.add(nyBestallning);
               //  aktuellaBestallningar.add(nyBestallning);
+              if(!gjort){
                 aktuellaBestallningar.put(aktuellaBestallningar.size()+1, nyBestallning);
                 minaBestallningar.add(nyBestallning);
-                }
+                gjort=true;
+              }
+              
+                }//fel99
+                
         }
         
         catch(Exception e){

@@ -66,6 +66,7 @@ public class Bestallning {
     }
     public void setOI(Orderinfo oo){
         OI.add(oo);
+        antalVaror++;
     }
  
             int id;
